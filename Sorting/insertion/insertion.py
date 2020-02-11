@@ -1,6 +1,5 @@
 import numpy as np 
 
-np.random.seed(101)
 arr = np.random.randint(0,100,(10))
 
 i = 0 ;
