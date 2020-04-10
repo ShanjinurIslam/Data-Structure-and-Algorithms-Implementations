@@ -8,3 +8,21 @@
 5.  Counting - Running Time O(n + N) where N is the largest Number
 
 ## Searching Algorithms
+
+## Graph
+
+### Representations
+
+1. Adjacency List (Weighted and Non Weighted)
+2. Adjacency Matrix
+
+### Traversal
+
+1. BFS
+2. DFS
+
+#### Applications
+
+1. Is connected 
+2. Has Cycles
+3. Is bipartite
