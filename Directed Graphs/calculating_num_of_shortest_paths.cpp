@@ -8,19 +8,21 @@ class Graph
 {
 private:
     vector<pair<int, int>> *adj;
-    vector<pair<int, int>> *tree;
+    vector<pair<int, int>> *graph;
     int **map;
     bool has_cycle;
     int *num_path;
     int N;
     bool directed;
+    int *node_color;
 
 public:
     Graph(int N, bool directed = false)
     {
         this->N = N;
         adj = new vector<pair<int, int>>[N];
-        tree = new vector<pair<int, int>>[N];
+        graph = new vector<pair<int, int>>[N];
+        node_color = new int[N];
         this->directed = directed;
         num_path = new int[N];
         map = new int *[N];
@@ -71,8 +73,10 @@ public:
         {
             distances[i] = INT_MAX;
             visited[i] = false;
+            num_path[i] = 0;
         }
         distances[starting_node] = 0;
+        num_path[starting_node] = 1;
         priority_queue<tuple<int, int, int>> queue;
         queue.push({0, starting_node, starting_node});
 
@@ -82,20 +86,28 @@ public:
             queue.pop();
             int w, a, s;
             tie(w, a, s) = p;
-
             if (visited[s])
+            {
+                if (s != starting_node)
+                {
+                    if (distances[s] == distances[a] + map[a][s])
+                    {
+                        graph[a].push_back({s, map[a][s]});
+                    }
+                }
                 continue;
+            }
             else
                 visited[s] = true;
             if (s != starting_node)
             {
-                tree[a].push_back({s, map[a][s]});
+                graph[a].push_back({s, map[a][s]});
             }
             for (auto u : adj[s])
             {
                 int b = u.first;
                 int w = u.second;
-                if (distances[s] + w < distances[b])
+                if (distances[s] + w <= distances[b])
                 {
                     distances[b] = distances[s] + w;
                     queue.push({-distances[b], s, b});
@@ -103,18 +115,90 @@ public:
             }
         }
 
-        cout << "Output Tree: " << endl;
+        cout << "Output Graph: " << endl;
 
         for (int i = 0; i < N; i++)
         {
             cout << (i + 1) << " : ";
-            for (auto u : tree[i])
+            for (auto u : graph[i])
             {
                 int b, w;
                 tie(b, w) = u;
                 printf("(%d,%d) ", b + 1, w);
             }
             cout << endl;
+        }
+    }
+
+    void dfs_visit(int i)
+    {
+        if (node_color[i] == 0)
+        {
+            node_color[i] = 1;
+        }
+        else if (node_color[i] == 1)
+        {
+            has_cycle = true;
+            return;
+        }
+        else
+        {
+            return;
+        }
+        for (auto u : graph[i])
+        {
+            dfs_visit(u.first);
+        }
+        node_color[i] = 2;
+        if (!has_cycle && node_color[i] == 2)
+        {
+            s.push(i);
+        }
+    }
+
+    void topological_sort()
+    {
+        // if graph contains a cycle then no topological sorting can be found
+        // if the graph is acyclic then a simple dfs would return an ordering
+        while (!s.empty())
+        {
+            s.pop();
+        }
+        has_cycle = false;
+        int num_paths[N];
+        for (int i = 0; i < N; i++)
+        {
+            node_color[i] = 0;
+            num_paths[i] = 0;
+        }
+        int starting_node = 0;
+        dfs_visit(starting_node);
+
+        num_paths[starting_node] = 1;
+        if (!has_cycle)
+        {
+            cout<<"Topological Sort :"<<endl; 
+            while (!s.empty())
+            {
+                int a = s.top();
+                s.pop();
+                for (auto u : graph[a])
+                {
+                    num_paths[u.first] += num_paths[a];
+                }
+                cout << a << " ";
+            }
+            cout << "\n";
+
+            cout<<"Number of shortest paths :"<<endl; 
+            for (int i = 0; i < N; i++)
+            {
+                cout<<i<<" "<<num_paths[i]<<"\n" ;
+            }
+        }
+        else
+        {
+            cout << "the graph has cycle" << endl;
         }
     }
 
@@ -126,7 +210,7 @@ public:
 
 int main()
 {
-    Graph graph(5);
+    Graph graph(5, true);
     graph.add_edge(1, 2, 3);
     graph.add_edge(1, 3, 5);
     graph.add_edge(2, 3, 2);
@@ -134,6 +218,8 @@ int main()
     graph.add_edge(2, 4, 4);
     graph.add_edge(2, 5, 8);
     graph.add_edge(4, 5, 1);
+    //g.printGraph();
     graph.dijkstra(0);
+    graph.topological_sort();
     return 0;
 }

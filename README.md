@@ -26,3 +26,22 @@
 1. Is connected 
 2. Has Cycles
 3. Is bipartite
+
+## Shortest Path
+
+1. Bellman Ford 	-	O(mn)
+2. Dijkstra 		-	O(n + mlogm) 
+3. Floyd Warshall 	-	O(n<sup>3</sup>)
+
+## Tree
+
+### Non Binary Tree Representation
+
+### Traversal
+1. DFS 
+2. Dynamic Programming O(N) - (count number of leaf nodes)
+
+## Diameter
+
+1. Algorithm 1 by calculating max distance to leaf node
+2. Algorithm 2 by calculating double dfs

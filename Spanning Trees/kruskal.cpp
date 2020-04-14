@@ -113,14 +113,13 @@ int main()
     int N;
     N = 6;
     Graph graph(N);
-    graph.add_edge(1, 5, 5);
-    graph.add_edge(3, 6, 3);
     graph.add_edge(1, 2, 3);
-    graph.add_edge(4, 6, 7);
-    graph.add_edge(2, 5, 6);
-    graph.add_edge(2, 3, 5);
-    graph.add_edge(5, 6, 2);
-    graph.add_edge(3, 4, 9);
+    graph.add_edge(1, 3, 5);
+    graph.add_edge(2, 3, 2);
+    graph.add_edge(3, 4, 2);
+    graph.add_edge(2, 4, 4);
+    graph.add_edge(2, 5, 8);
+    graph.add_edge(4, 5, 1);
     graph.Kruskal();
     return 0;
 }
